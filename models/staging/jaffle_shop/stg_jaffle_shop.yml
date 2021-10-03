@@ -2,14 +2,23 @@ version: 2
 
 models:
   - name: stg_customers
+    description: "Customers of our Jaffle Shop"
     columns: 
       - name: customer_id
+        description: "Canonical ID of the customer"
         tests:
           - unique
           - not_null
   - name: stg_orders
+    description: "All orders as made by customers"
     columns: 
+      - name: order_id
+        description: "Order ID to match each customer"
+        tests:
+          - unique
+          - not_null
       - name: status
+        description: "{{doc('order_status')}}"
         tests:
             - accepted_values:
                 values:
@@ -18,5 +27,10 @@ models:
                 - returned
                 - placed
                 - return_pending
+      - name: customer_id
+        tests:
+            - relationships:
+                to: ref('stg_customers')
+                field: customer_id
             
                 
